@@ -10,8 +10,9 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import { styled } from "@mui/material/styles";
+import AuthContext from "../context/AuthContext";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -45,6 +46,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Login() {
+  const { login } = React.useContext(AuthContext);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -52,7 +54,7 @@ export default function Login() {
     event.preventDefault();
 
     if (email.trim() === "" || password.trim() === "") {
-      toast.error('Please fill all the fields');
+      toast.error("Please fill all the fields");
       return;
     }
 
@@ -60,6 +62,8 @@ export default function Login() {
       email: email,
       password: password,
     });
+
+    login(email, password);
   };
 
   return (

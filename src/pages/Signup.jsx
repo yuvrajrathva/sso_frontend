@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import toast, { Toaster } from "react-hot-toast";
+import AuthContext from "../context/AuthContext";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -43,6 +44,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Signup() {
+  const { signup } = React.useContext(AuthContext);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [rollNumber, setRollNumber] = React.useState("");
@@ -106,12 +108,16 @@ export default function Signup() {
     if (!validateInputs()) {
       return;
     }
-
-    const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+      first_name: firstName,
+      last_name: lastName,
+      roll_number: rollNumber,
+      phone_number: phoneNumber,
+      email: email,
+      password: password,
     });
+
+    signup(firstName, lastName, rollNumber, email, password, phoneNumber);
   };
 
   return (
