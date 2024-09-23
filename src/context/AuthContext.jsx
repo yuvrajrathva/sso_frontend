@@ -62,7 +62,8 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(`${backendUrl}/signup`, signupData);
       setLoading(false);
       toast.success("Account created successfully. Please login.");
-      navigate("/login");
+      localStorage.setItem("sso-email", email);
+      navigate("/verification-code");
       return response.data;
     } catch (error) {
       console.error(error);
