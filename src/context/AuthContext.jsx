@@ -14,13 +14,17 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, pass) => {
     setLoading(true);
-    const loginData = {
+    const loginData = new URLSearchParams({
       username: email,
       password: pass,
-    };
+    });
     console.log(loginData);
     try {
-      const response = await axios.post(`${backendUrl}/login`, loginData);
+      const response = await axios.post(`${backendUrl}/login`, loginData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      });
       setUser(response.data);
       setLoading(false);
       navigate("/");
