@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { backendUrl } from "../config.js";
@@ -9,25 +9,27 @@ export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null); // initialize with session token if applicable
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const [redirectUri, setRedirectUri] = useState(searchParams.get("redirect_uri"));
+  const [responseType, setResponseType] = useState(searchParams.get("response_type"));
+  const [token, setToken] = useState(null); // initialize with session token if applicable
   const [loading, setLoading] = useState(true);
 
-  const login = async (email, pass) => {
+  const login = async (email, password) => {
     setLoading(true);
-    const loginData = new URLSearchParams({
-      username: email,
-      password: pass,
-    });
+    const loginData = {
+      email: email,
+      password: password,
+      redirect_uri: redirectUri,
+      response_type: responseType,
+    }
     console.log(loginData);
     try {
-      const response = await axios.post(`${backendUrl}/login`, loginData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-      });
-      setUser(response.data);
+      const response = await axios.post(`${backendUrl}/user/login`, loginData);
+      setToken(response.data);
       setLoading(false);
-      navigate("/");
+      window.location.href = response.data.redirect_uri + "?token=" + response.data.access_token;
       toast.success("Logged in successfully.");
       return response.data;
     } catch (error) {
@@ -63,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     };
     console.log(signupData);
     try {
-      const response = await axios.post(`${backendUrl}/signup`, signupData);
+      const response = await axios.post(`${backendUrl}/user/signup`, signupData);
       setLoading(false);
       toast.success("Account created successfully. Please login.");
       localStorage.setItem("sso-email", email);
@@ -74,17 +76,17 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
 
       if (error.response && error.response.data && error.response.data.detail) {
+        console.log(error.response.data.detail);
         toast.error(error.response.data.detail);
       } else {
         toast.error("An error occurred. Please try again later.");
       }
-
-      throw error;
+      // throw error;
     }
   };
 
   const contextData = {
-    user,
+    token,
     login,
     signup,
   };
@@ -95,7 +97,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <>
-      {/* <Toaster position="bottom-center" reverseOrder={false} /> */}
+      <Toaster position="bottom-center" reverseOrder={false} />
       <AuthContext.Provider value={contextData}>
         {loading ? null : children}
       </AuthContext.Provider>
