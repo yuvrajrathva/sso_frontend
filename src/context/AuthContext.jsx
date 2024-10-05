@@ -11,9 +11,15 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [redirectUri, setRedirectUri] = useState(searchParams.get("redirect_uri"));
-  const [responseType, setResponseType] = useState(searchParams.get("response_type"));
-  const [token, setToken] = useState(null); // initialize with session token if applicable
+  const [redirectUri, setRedirectUri] = useState(
+    searchParams.get("redirect_uri")
+  );
+  const [responseType, setResponseType] = useState(
+    searchParams.get("response_type")
+  );
+  const [clientId, setClientId] = useState(searchParams.get("client_id"));
+  const [scope, setScope] = useState(searchParams.get("scope"));
+  const [state, setState] = useState(searchParams.get("state"));
   const [loading, setLoading] = useState(true);
 
   const login = async (email, password) => {
@@ -23,13 +29,16 @@ export const AuthProvider = ({ children }) => {
       password: password,
       redirect_uri: redirectUri,
       response_type: responseType,
-    }
+      client_id: clientId,
+      scope: scope,
+      state: state,
+    };
     console.log(loginData);
     try {
       const response = await axios.post(`${backendUrl}/user/login`, loginData);
-      setToken(response.data);
       setLoading(false);
-      window.location.href = response.data.redirect_uri + "?token=" + response.data.access_token;
+
+      window.location.href = response.request.responseURL;
       toast.success("Logged in successfully.");
       return response.data;
     } catch (error) {
@@ -65,7 +74,10 @@ export const AuthProvider = ({ children }) => {
     };
     console.log(signupData);
     try {
-      const response = await axios.post(`${backendUrl}/user/signup`, signupData);
+      const response = await axios.post(
+        `${backendUrl}/user/signup`,
+        signupData
+      );
       setLoading(false);
       toast.success("Account created successfully. Please login.");
       localStorage.setItem("sso-email", email);
@@ -86,7 +98,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const contextData = {
-    token,
     login,
     signup,
   };
