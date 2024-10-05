@@ -1,4 +1,5 @@
 import React from "react";
+import AuthContext from "../context/AuthContext";
 import Box from "@mui/material/Box";
 import MuiCard from "@mui/material/Card";
 import Link from "@mui/material/Link";
@@ -12,7 +13,6 @@ import Stack from "@mui/material/Stack";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import toast, { Toaster } from "react-hot-toast";
 import { styled } from "@mui/material/styles";
-import AuthContext from "../context/AuthContext";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",

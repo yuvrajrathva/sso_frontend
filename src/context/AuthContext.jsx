@@ -1,26 +1,26 @@
-import React, { createContext, useState } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { backendUrl } from "../config.js";
 
-const AuthContext = createContext();
+const AuthContext = React.createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [redirectUri, setRedirectUri] = useState(
+  const [redirectUri, setRedirectUri] = React.useState(
     searchParams.get("redirect_uri")
   );
-  const [responseType, setResponseType] = useState(
+  const [responseType, setResponseType] = React.useState(
     searchParams.get("response_type")
   );
-  const [clientId, setClientId] = useState(searchParams.get("client_id"));
-  const [scope, setScope] = useState(searchParams.get("scope"));
-  const [state, setState] = useState(searchParams.get("state"));
-  const [loading, setLoading] = useState(true);
+  const [clientId, setClientId] = React.useState(searchParams.get("client_id"));
+  const [scope, setScope] = React.useState(searchParams.get("scope"));
+  const [state, setState] = React.useState(searchParams.get("state"));
+  const [loading, setLoading] = React.useState(true);
 
   const login = async (email, password) => {
     setLoading(true);
@@ -93,13 +93,14 @@ export const AuthProvider = ({ children }) => {
       } else {
         toast.error("An error occurred. Please try again later.");
       }
-      // throw error;
+      throw error;
     }
   };
 
   const contextData = {
     login,
     signup,
+    scope,
   };
 
   React.useEffect(() => {
