@@ -101,6 +101,10 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     scope,
+    clientId,
+    responseType,
+    redirectUri,
+    state,
   };
 
   React.useEffect(() => {

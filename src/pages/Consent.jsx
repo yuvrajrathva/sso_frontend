@@ -1,10 +1,12 @@
 import React from "react";
+import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import MuiCard from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import { backendUrl } from "../config.js";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -38,11 +40,27 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Consent() {
-  const { scope } = React.useContext(AuthContext);
+  const { responseType, scope, clientId, state, redirectUri } =
+    React.useContext(AuthContext);
 
   const handleContinuing = () => {
-    console.log("Continuing");
-  }
+    const consentData = {
+      response_type: responseType,
+      scope: scope,
+      client_id: clientId,
+      state: state,
+      redirect_uri: redirectUri,
+    };
+    console.log(consentData);
+    axios
+      .get(`${backendUrl}/service-provider/authorize/`, { params: consentData }, { withCredentials: true })
+      .then((response) => {
+        window.location.href = response.request.responseURL;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <>
@@ -69,7 +87,11 @@ export default function Consent() {
             <Button variant="outlined" color="primary">
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleContinuing}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleContinuing}
+            >
               Continue
             </Button>
           </Stack>
