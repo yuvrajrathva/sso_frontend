@@ -13,15 +13,11 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [redirectUri, setRedirectUri] = React.useState(
-    searchParams.get("redirect_uri")
-  );
-  const [responseType, setResponseType] = React.useState(
-    searchParams.get("response_type")
-  );
-  const [clientId, setClientId] = React.useState(searchParams.get("client_id"));
-  const [scope, setScope] = React.useState(searchParams.get("scope"));
-  const [state, setState] = React.useState(searchParams.get("state"));
+  const redirectUri = searchParams.get("redirect_uri");
+  const responseType = searchParams.get("response_type");
+  const clientId = searchParams.get("client_id");
+  const scope = searchParams.get("scope");
+  const state = searchParams.get("state");
   const [loading, setLoading] = React.useState(true);
 
   const login = async (email, password) => {

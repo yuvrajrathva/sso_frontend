@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import AuthContext from "../context/AuthContext";
 import MuiCard from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -41,11 +40,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Consent() {
-  // const { responseType, scope, clientId, state, redirectUri } =
-  //   React.useContext(AuthContext);
-  
   const location = useLocation();
-  const { response_type, scope, client_id, state, redirect_uri } = location.state;
+  const { response_type, scope, client_id, state, redirect_uri } =
+    location.state;
 
   const handleContinuing = () => {
     const consentData = {
@@ -57,14 +54,15 @@ export default function Consent() {
     };
     console.log(consentData);
     axios
-      .post(`${backendUrl}/service-provider/authorize/`, consentData, { withCredentials: true })
+      .post(`${backendUrl}/service-provider/authorize/`, consentData, {
+        withCredentials: true,
+      })
       .then((response) => {
         console.log(response);
-        console.log(response.data.redirect_uri);
-        window.location.href = response.data.redirect_uri;
+        window.location.href = `${response.data.redirect_uri}?auth_code=${response.data.code}&state=${response.data.state}`;
       })
       .catch((error) => {
-      console.error(error);
+        console.error(error);
       });
   };
 
