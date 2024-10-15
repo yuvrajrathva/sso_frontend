@@ -7,6 +7,8 @@ import { backendUrl } from "../config.js";
 const AuthContext = React.createContext();
 export default AuthContext;
 
+axios.defaults.withCredentials = true;
+
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,8 +40,17 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(`${backendUrl}/user/login`, loginData);
       setLoading(false);
 
-      window.location.href = response.request.responseURL;
       toast.success("Logged in successfully.");
+      navigate("/consent", {
+        state: {
+          response_type: loginData.response_type,
+          client_id: loginData.client_id,
+          state: loginData.state,
+          scope: loginData.scope,
+          redirect_uri: loginData.redirect_uri,
+        },
+      });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error);
