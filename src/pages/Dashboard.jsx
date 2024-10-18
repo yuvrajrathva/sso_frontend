@@ -2,8 +2,9 @@ import React from "react";
 import HomePage from "../components/HomePage";
 import { AppProvider } from "@toolpad/core";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { Key, Hub, Home } from "@mui/icons-material";
+import { Key, Hub, Home, Info } from "@mui/icons-material";
 import Credentials from "../components/Credentials";
+import About from "../components/About";
 
 const NAVIGATION = [
   {
@@ -16,11 +17,13 @@ const NAVIGATION = [
     title: "Credentials",
     icon: <Key />,
   },
+  {
+    segment: "about",
+    title: "About",
+    icon: <Info />,
+  },
 ];
 
-const PAGES = {
-  credentials: <Credentials />,
-};
 
 export default function Dashboard() {
   const [pathname, setPathname] = React.useState("/dashboard");
@@ -31,6 +34,12 @@ export default function Dashboard() {
       navigate: (path) => setPathname(String(path)),
     };
   }, [pathname]);
+
+  const PAGES = {
+    credentials: <Credentials setPathname={setPathname}/>,
+    about: <About />,
+  };
+
   return (
     <AppProvider
       navigation={NAVIGATION}
@@ -42,7 +51,7 @@ export default function Dashboard() {
     >
       <DashboardLayout>
         <div style={{ padding: "50px 100px" }}>
-          {PAGES[router.pathname.slice(1)] || <HomePage />}
+          {PAGES[router.pathname.slice(1)] || <HomePage  setPathname={setPathname}/>}
         </div>
       </DashboardLayout>
     </AppProvider>
