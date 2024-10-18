@@ -8,7 +8,7 @@ import {
   ContentCopy,
   Quiz,
 } from "@mui/icons-material/";
-import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function HomePage(props) {
@@ -22,15 +22,17 @@ export default function HomePage(props) {
   return (
     <>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <Box sx={{ display: "flex", gap: "50px" }}>
-        <Box
+      <Grid container spacing={3}>
+        <Grid
+          size={{ xs: 12, md: 12, lg: 4 }}
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
+            gap: "20px",
           }}
         >
-          <Paper sx={{ padding: "20px", maxWidth: "500px" }}>
+          <Paper sx={{ padding: "20px" }}>
             <HolidayVillage fontSize="large" />
             <h1>Welcome to SSO IITJ</h1>
             <p style={{ color: "grey" }}>
@@ -38,7 +40,7 @@ export default function HomePage(props) {
               Technology Jodhpur (IITJ).
             </p>
           </Paper>
-          <Paper sx={{ padding: "20px", maxWidth: "500px" }}>
+          <Paper sx={{ padding: "20px" }}>
             <h2
               style={{
                 display: "flex",
@@ -112,9 +114,9 @@ export default function HomePage(props) {
               Manage keys
             </div>
           </Paper>
-        </Box>
-        <Box>
-          <Paper sx={{ padding: "20px", maxWidth: "700px" }}>
+        </Grid>
+        <Grid size={{ xs: 12, md: 12, lg: 8 }}>
+          <Paper sx={{ padding: "20px" }}>
             <h2
               style={{
                 display: "flex",
@@ -146,8 +148,8 @@ export default function HomePage(props) {
               style={{ width: "100%" }}
             />
           </Paper>
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </>
   );
 }
