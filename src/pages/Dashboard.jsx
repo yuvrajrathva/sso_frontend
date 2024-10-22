@@ -1,6 +1,6 @@
 import React from "react";
 import HomePage from "../components/HomePage";
-import { AppProvider } from "@toolpad/core";
+import { Account, AppProvider } from "@toolpad/core";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { Key, Hub, Home, Info } from "@mui/icons-material";
 import Credentials from "../components/Credentials";
@@ -24,9 +24,33 @@ const NAVIGATION = [
   },
 ];
 
-
 export default function Dashboard() {
   const [pathname, setPathname] = React.useState("/dashboard");
+  const [session, setSession] = React.useState({
+    user: {
+      name: "Yuvraj Rathva",
+      email: "rathva.1@iitj.ac.in",
+      image: "https://avatars.githubusercontent.com/u/19550456",
+    },
+  });
+
+  const authentication = React.useMemo(() => {
+    return {
+      signIn: () => {
+        setSession({
+          user: {
+            name: "Bharat Kashyap",
+            email: "bharatkashyap@outlook.com",
+            image: "https://avatars.githubusercontent.com/u/19550456",
+          },
+        });
+      },
+      signOut: () => {
+        setSession(null);
+      },
+    };
+  }, []);
+
   const router = React.useMemo(() => {
     return {
       pathname,
@@ -36,12 +60,14 @@ export default function Dashboard() {
   }, [pathname]);
 
   const PAGES = {
-    credentials: <Credentials setPathname={setPathname}/>,
+    credentials: <Credentials setPathname={setPathname} />,
     about: <About />,
   };
 
   return (
     <AppProvider
+      session={session}
+      authentication={authentication}
       navigation={NAVIGATION}
       branding={{
         logo: <Hub fontSize="large" style={{ padding: "5px" }} />,
@@ -49,9 +75,16 @@ export default function Dashboard() {
       }}
       router={router}
     >
+      <Account
+        slots={{
+          menuItems: <div>Settings</div>,
+        }}
+      />
       <DashboardLayout>
-        <div style={{ padding: "50px 100px" }}>
-          {PAGES[router.pathname.slice(1)] || <HomePage  setPathname={setPathname}/>}
+        <div style={{ padding: "20px 100px" }}>
+          {PAGES[router.pathname.slice(1)] || (
+            <HomePage setPathname={setPathname} />
+          )}
         </div>
       </DashboardLayout>
     </AppProvider>
