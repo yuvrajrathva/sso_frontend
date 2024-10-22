@@ -9,15 +9,43 @@ import {
   Quiz,
 } from "@mui/icons-material/";
 import Grid from "@mui/material/Grid2";
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import AuthContextSP from "../context/AuthContextSP";
+import { backendUrl } from "../config";
 
 export default function HomePage(props) {
+  const {accessToken} = React.useContext(AuthContextSP);
   const [showSecret, setShowSecret] = React.useState(false);
+  const [userDetails, setUserDetails] = React.useState({});
 
   const handleCopy = (copyText) => {
     navigator.clipboard.writeText(copyText);
     toast.success("Copied to clipboard");
   };
+
+  React.useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/developer/get-user/`,{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(response.data);
+        setUserDetails(response.data);
+      } catch (error) {
+        console.error(error);
+        if (error.response && error.response.data && error.response.data.detail) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error("An error occurred. Please try again later.");
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   return (
     <>
