@@ -1,4 +1,5 @@
 import React from "react";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -12,11 +13,15 @@ axios.defaults.withCredentials = true;
 export const AuthProviderSP = ({ children }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(true);
-  const [accessToken, setAccessToken] = React.useState(
-    localStorage.getItem("sso-access-token") || null
+  const [user, setUser] = React.useState(() =>
+    localStorage.getItem("authTokens")
+      ? jwtDecode(localStorage.getItem("authTokens"))
+      : null
   );
-  const [refreshToken, setRefreshToken] = React.useState(
-    localStorage.getItem("sso-refresh-token") || null
+  const [authTokens, setAuthTokens] = React.useState(() =>
+    localStorage.getItem("authTokens")
+      ? JSON.parse(localStorage.getItem("authTokens"))
+      : null
   );
 
   const login = async (email, password) => {
@@ -33,11 +38,12 @@ export const AuthProviderSP = ({ children }) => {
       );
       setLoading(false);
 
+      console.log(response.data);
+      localStorage.setItem("authTokens", JSON.stringify(response.data));
+      setUser(jwtDecode(response.data.access_token));
+      setAuthTokens(response.data);
       toast.success("Logged in successfully.");
       navigate("/");
-      console.log(response.data);
-      localStorage.setItem("sso-access-token", response.data.access_token);
-      localStorage.setItem("sso-refresh-token", response.data.refresh_token);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -51,6 +57,14 @@ export const AuthProviderSP = ({ children }) => {
 
       throw error;
     }
+  };
+
+  const logoutUser = () => {
+    setAuthTokens(null);
+    setUser(null);
+    localStorage.removeItem("authTokens");
+    navigate("/developer/login");
+    toast.success("Logged out successfully!");
   };
 
   const signup = async (
@@ -98,8 +112,11 @@ export const AuthProviderSP = ({ children }) => {
   const contextData = {
     login,
     signup,
-    accessToken,
-    refreshToken,
+    authTokens,
+    setAuthTokens,
+    user,
+    setUser,
+    logoutUser,
   };
 
   React.useEffect(() => {
