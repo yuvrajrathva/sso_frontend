@@ -53,9 +53,12 @@ export default function Consent() {
       redirect_uri: redirect_uri,
     };
     console.log(consentData);
+    const sessionId = localStorage.getItem("session_id");
     axios
       .post(`${backendUrl}/service-provider/authorize/`, consentData, {
-        withCredentials: true,
+      headers: {
+        "session_id": sessionId,
+      },
       })
       .then((response) => {
         console.log(response);

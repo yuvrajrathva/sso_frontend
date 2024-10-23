@@ -7,7 +7,7 @@ import { backendUrl } from "../config.js";
 const AuthContext = React.createContext();
 export default AuthContext;
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
 
       toast.success("Logged in successfully.");
+      localStorage.setItem("session_id", response.data.session_id);
       navigate("/consent", {
         state: {
           response_type: loginData.response_type,
