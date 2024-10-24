@@ -18,6 +18,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
+import { redirect } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,6 +60,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Client secret",
+  },
+  {
+    id: "redirectUri",
+    numeric: false,
+    disablePadding: false,
+    label: "Redirect URI",
   },
   {
     id: "scopes",
@@ -133,8 +140,8 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar(props) {
   const { numSelected, selectedRows } = props;
   const handleDeleteKeys = () => {
-    console.log("Deleting keys with IDs:", selectedRows)
-  }
+    console.log("Deleting keys with IDs:", selectedRows);
+  };
   return (
     <Toolbar
       sx={[
@@ -244,12 +251,21 @@ export default function KeysTable(props) {
     () =>
       rows
         .map((row) => {
+          const date = new Date(row.created_at);
           return {
             id: row.id,
             name: row.name,
-            creationDate: row.created_at,
+            creationDate: date.toLocaleDateString('en-IN',{
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+            }),
             clientId: row.client_id,
             clientSecret: row.client_secret,
+            redirectUri: row.redirect_url,
             scopes: row.scopes.join(", "),
           };
         })
@@ -261,7 +277,10 @@ export default function KeysTable(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedRows={selected}/>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          selectedRows={selected}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -312,6 +331,7 @@ export default function KeysTable(props) {
                     <TableCell align="left">{row.creationDate}</TableCell>
                     <TableCell align="left">{row.clientId}</TableCell>
                     <TableCell align="left">{row.clientSecret}</TableCell>
+                    <TableCell align="left">{row.redirectUri}</TableCell>
                     <TableCell align="left">{row.scopes}</TableCell>
                   </TableRow>
                 );

@@ -2,24 +2,23 @@ import React from "react";
 import { Box, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import KeysTable from "./KeysTable";
+import useAxios from "../context/UseAxios";
 
 export default function Credentials() {
-  const [rows, setRows] = React.useState([{
-    id: 1,
-    name: "Default",
-    client_id: "123456",
-    client_secret: "abcdef",
-    created_at: "2021-10-01",
-    scopes: ["name", "email"],
-  },
-  {
-    id: 2,
-    name: "Test",
-    client_id: "654321",
-    client_secret: "fedfasf",
-    created_at: "2021-10-02",
-    scopes: ["name", "email", "phone"],
-  }]);
+  const axios = useAxios();
+  const [rows, setRows] = React.useState([]);
+
+  React.useEffect(() => {
+    axios
+      .get("/service-provider/credentials/")
+      .then((response) => {
+        console.log("Credentials fetched successfully:", response.data);
+        setRows(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching credentials:", error);
+      });
+  }, []);
 
   return (
     <>
@@ -34,7 +33,13 @@ export default function Credentials() {
         API keys are used to authorize your app's requests to the sso. You can
         generate and manage your API keys in your account settings.
       </p>
-      <KeysTable rows={rows} />
+      {rows?.length === 0 ? (
+        <p>
+          You don't have any API keys yet. Click the button above to create one.
+        </p>
+      ) : (
+        <KeysTable rows={rows} />
+      )}
     </>
   );
 }
