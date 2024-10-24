@@ -41,8 +41,12 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 export default function Consent() {
   const location = useLocation();
-  const { response_type, scope, client_id, state, redirect_uri } =
-    location.state;
+  const params = new URLSearchParams(location.search);
+  const response_type = location.state?.response_type || params.get("response_type");
+  const scope = location.state?.scope || params.get("scope");
+  const client_id = location.state?.client_id || params.get("client_id");
+  const state = location.state?.state || params.get("state");
+  const redirect_uri = location.state?.redirect_uri || params.get("redirect_uri");
 
   const handleContinuing = () => {
     const consentData = {

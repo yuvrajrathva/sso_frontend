@@ -105,6 +105,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifySession = async () => {
+    try {
+      const verifySessionData = {
+        redirect_uri: redirectUri,
+        response_type: responseType,
+        client_id: clientId,
+        scope: scope,
+        state: state,
+      };
+      const response = await axios.post(`${backendUrl}/user/verify-session`, verifySessionData, {
+        headers: {
+          session_id: localStorage.getItem("session_id"),
+        },
+      });
+      console.log(response);
+      window.location.href = response.request.responseURL;
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   const contextData = {
     login,
     signup,
@@ -113,6 +136,7 @@ export const AuthProvider = ({ children }) => {
     responseType,
     redirectUri,
     state,
+    verifySession
   };
 
   React.useEffect(() => {

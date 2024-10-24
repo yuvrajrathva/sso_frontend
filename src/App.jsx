@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import DeveloperLogin from "./pages/DeveloperLogin";
 import Signup from "./pages/Signup";
@@ -21,6 +22,7 @@ function App() {
         </AuthProviderSP>
         <AuthProvider>
           <Routes>
+            <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/verification-code" element={<VerificationCode />} />
