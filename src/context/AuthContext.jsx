@@ -7,7 +7,7 @@ import { backendUrl } from "../config.js";
 const AuthContext = React.createContext();
 export default AuthContext;
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
 
       toast.success("Logged in successfully.");
+      localStorage.setItem("session_id", response.data.session_id);
       navigate("/consent", {
         state: {
           response_type: loginData.response_type,
@@ -104,6 +105,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifySession = async () => {
+    try {
+      const verifySessionData = {
+        redirect_uri: redirectUri,
+        response_type: responseType,
+        client_id: clientId,
+        scope: scope,
+        state: state,
+      };
+      const response = await axios.post(`${backendUrl}/user/verify-session`, verifySessionData, {
+        headers: {
+          session_id: localStorage.getItem("session_id"),
+        },
+      });
+      console.log(response);
+      window.location.href = response.request.responseURL;
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   const contextData = {
     login,
     signup,
@@ -112,6 +136,7 @@ export const AuthProvider = ({ children }) => {
     responseType,
     redirectUri,
     state,
+    verifySession
   };
 
   React.useEffect(() => {

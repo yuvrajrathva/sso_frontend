@@ -8,7 +8,7 @@ import { backendUrl } from "../config.js";
 const AuthContextSP = React.createContext();
 export default AuthContextSP;
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export const AuthProviderSP = ({ children }) => {
   const navigate = useNavigate();
