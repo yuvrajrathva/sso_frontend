@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import HomePage from "../components/HomePage";
 import { AppProvider } from "@toolpad/core";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { Key, Hub, Home, Info } from "@mui/icons-material";
+import { Key, Hub, Home, Info, Build } from "@mui/icons-material";
 import Credentials from "../components/Credentials";
+import SetupPage from "../components/SetupPage";
 import About from "../components/About";
 import AuthContextSP from "../context/AuthContextSP";
 import useAxios from "../context/UseAxios";
@@ -16,6 +17,11 @@ const NAVIGATION = [
     segment: "home",
     title: "Home",
     icon: <Home />,
+  },
+  {
+    segment: "setup",
+    title: "Setup",
+    icon: <Build fontSize="small"/>,
   },
   {
     segment: "credentials",
@@ -85,7 +91,8 @@ export default function Dashboard() {
   }, [pathname]);
 
   const PAGES = {
-    credentials: <Credentials setPathname={setPathname} />,
+    setup: <SetupPage />,
+    credentials: <Credentials />,
     about: <About />,
   };
 
