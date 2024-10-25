@@ -19,6 +19,8 @@ import {
 import { Add } from "@mui/icons-material";
 import KeysTable from "./KeysTable";
 import useAxios from "../context/UseAxios";
+import AuthContextSP from "../context/AuthContextSP";
+import toast, { Toaster } from "react-hot-toast";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,12 +43,13 @@ function getStyles(name, personName, theme) {
 
 export default function Credentials() {
   const theme = useTheme();
-  const axios = useAxios();
+  const api = useAxios();
+  const { user } = React.useContext(AuthContextSP);
   const [rows, setRows] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState("");
+  const [keyName, setKeyName] = React.useState("");
   const [redirectUri, setRedirectUri] = React.useState("");
-  const [scopes, setScopes] = React.useState(["openid", "profile", "email"]);
+  const [scopes, setScopes] = React.useState([]);
   const [selectedScopes, setSelectedScopes] = React.useState([]);
 
   const handleScopeChange = (event) => {
@@ -57,14 +60,46 @@ export default function Credentials() {
   };
 
   const handleCreateKey = () => {
-    console.log(name, redirectUri);
-    selectedScopes.map((scope) => {
-      console.log(scope);
-    });
+    const newKeyData = {
+      name: keyName,
+      developer_id: user.sub,
+      redirect_url: redirectUri,
+      scopes: selectedScopes,
+    };
+    console.log(newKeyData);
+    api
+      .post("/service-provider/create/", newKeyData)
+      .then((response) => {
+        console.log(response);
+        toast.success("Key created successfully.");
+      })
+      .catch((error) => {
+        console.error("Error creating key:", error);
+        if (error.response && error.response.data && error.response.data.detail) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error("An error occurred. Please try again later.");
+        }
+      });
+    handleClose();
   };
 
   const handleClickOpen = () => {
     setOpen(true);
+    api
+      .get("/developer/available-scopes/")
+      .then((response) => {
+        console.log("Scopes fetched successfully:", response.data);
+        setScopes(response.data.map((scope) => scope.scope));
+      })
+      .catch((error) => {
+        console.error("Error fetching scopes:", error);
+        if (error.response && error.response.data && error.response.data.detail) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error("An error occurred. Please try again later.");
+        }
+      });
   };
 
   const handleClose = () => {
@@ -72,14 +107,14 @@ export default function Credentials() {
   };
 
   React.useEffect(() => {
-    axios
-      .get("/service-provider/credentials/")
+    api
+      .get("/developer/keys/")
       .then((response) => {
-        console.log("Credentials fetched successfully:", response.data);
+        console.log("Keys fetched successfully:", response.data);
         setRows(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching credentials:", error);
+        console.error("Error fetching keys:", error);
       });
   }, []);
 
@@ -102,11 +137,7 @@ export default function Credentials() {
             component: "form",
             onSubmit: (event) => {
               event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries(formData.entries());
-              const email = formJson.email;
-              console.log(email);
-              handleClose();
+              handleCreateKey();
             },
           }}
         >
@@ -125,7 +156,7 @@ export default function Credentials() {
                 label="Key Name"
                 type="text"
                 fullWidth
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => setKeyName(event.target.value)}
                 variant="outlined"
               />
               <TextField
@@ -140,7 +171,7 @@ export default function Credentials() {
                 onChange={(event) => setRedirectUri(event.target.value)}
                 variant="outlined"
               />
-              <FormControl fullWidth>
+              <FormControl fullWidth margin="dense">
                 <InputLabel id="demo-simple-select-label">Scopes</InputLabel>
                 <Select
                   labelId="demo-multiple-chip-label"
@@ -175,9 +206,7 @@ export default function Credentials() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit" onClick={handleCreateKey}>
-              Create
-            </Button>
+            <Button type="submit">Create</Button>
           </DialogActions>
         </Dialog>
       </Box>
@@ -192,6 +221,7 @@ export default function Credentials() {
       ) : (
         <KeysTable rows={rows} />
       )}
+      <Toaster position="bottom-center" reverseOrder={false} />
     </>
   );
 }

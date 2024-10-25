@@ -56,7 +56,7 @@ export default function Dashboard() {
   React.useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await api.get(`${backendUrl}/developer/get-user/`);
+        const response = await api.get("/developer/get-user/");
         console.log(response.data);
         setUserDetails({
           user: {
