@@ -28,7 +28,7 @@ const useAxios = () => {
       const response = await axios.post(
         `${backendUrl}/developer/token/refresh/`,
         {
-          refresh: authTokens.refresh_token,
+          refresh_token: authTokens.refresh_token,
         }
       );
 
