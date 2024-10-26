@@ -17,6 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ContentCopy from "@mui/icons-material/ContentCopy";
 import { visuallyHidden } from "@mui/utils";
 import useAxios from "../context/UseAxios";
 import toast, { Toaster } from "react-hot-toast";
@@ -202,7 +203,7 @@ function EnhancedTableToolbar(props) {
       {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton onClick={() => handleDeleteKeys()}>
-            <DeleteIcon />
+            <DeleteIcon sx={{ color: "#d11a2a" }} />
           </IconButton>
         </Tooltip>
       )}
@@ -263,6 +264,11 @@ export default function KeysTable(props) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleCopy = (copyText, copyMessage) => {
+    navigator.clipboard.writeText(copyText);
+    toast.success(copyMessage);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -351,8 +357,48 @@ export default function KeysTable(props) {
                       {row.name}
                     </TableCell>
                     <TableCell align="left">{row.creationDate}</TableCell>
-                    <TableCell align="left">{row.clientId}</TableCell>
-                    <TableCell align="left">{row.clientSecret}</TableCell>
+                    <TableCell align="left">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          paddingRight: "15px",
+                        }}
+                      >
+                        {row.clientId}
+                        <ContentCopy
+                          fontSize="small"
+                          style={{
+                            cursor: "pointer",
+                            color: "gray",
+                          }}
+                          onClick={() =>
+                            handleCopy(row.clientId, "Client ID copied.")
+                          }
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell align="left">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          paddingRight: "15px",
+                        }}
+                      >
+                        {row.clientSecret}
+                        <ContentCopy
+                          fontSize="small"
+                          style={{ cursor: "pointer", color: "gray" }}
+                          onClick={() =>
+                            handleCopy(
+                              row.clientSecret,
+                              "Client secret copied."
+                            )
+                          }
+                        />
+                      </div>
+                    </TableCell>
                     <TableCell align="left">{row.redirectUri}</TableCell>
                     <TableCell align="left">{row.scopes}</TableCell>
                   </TableRow>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import dayjs from "dayjs";
 import { useContext } from "react";
@@ -9,6 +10,7 @@ import toast from "react-hot-toast";
 const useAxios = () => {
   const { authTokens, setUser, setAuthTokens, logoutUser } =
     useContext(AuthContextSP);
+  const navigate = useNavigate();
   const axiosInstance = axios.create({
     baseURL: backendUrl,
     headers: {
@@ -44,7 +46,9 @@ const useAxios = () => {
       if (error.response && error.response.status === 401) {
         toast.error("Session expired. Please login again.");
       }
-      logoutUser();
+      // we should logout here? or just redirect to login page
+      // logoutUser();
+      navigate("/developer/login")
     }
     return req;
   });
