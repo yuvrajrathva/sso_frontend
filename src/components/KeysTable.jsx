@@ -18,7 +18,8 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
-import { redirect } from "react-router-dom";
+import useAxios from "../context/UseAxios";
+import toast, { Toaster } from "react-hot-toast";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -138,9 +139,30 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
+  const api = useAxios();
   const { numSelected, selectedRows } = props;
   const handleDeleteKeys = () => {
-    console.log("Deleting keys with IDs:", selectedRows);
+    console.log("Deleting keys with IDs:", Object.values(selectedRows));
+    api
+      .delete("/developer/delete-service-providers/", {
+        data: Object.values(selectedRows),
+      })
+      .then((response) => {
+        console.log("Keys deleted:", response);
+        toast.success(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error deleting keys:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
+          toast.error(error.response.data.detail);
+        } else {
+          toast.error("An error occurred. Please try again later.");
+        }
+      });
   };
   return (
     <Toolbar
@@ -255,13 +277,13 @@ export default function KeysTable(props) {
           return {
             id: row.id,
             name: row.name,
-            creationDate: date.toLocaleDateString('en-IN',{
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric',
-              second: 'numeric',
+            creationDate: date.toLocaleDateString("en-IN", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
             }),
             clientId: row.client_id,
             clientSecret: row.client_secret,
@@ -358,6 +380,7 @@ export default function KeysTable(props) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <Toaster position="bottom-center" reverseOrder={false} />
     </Box>
   );
 }
