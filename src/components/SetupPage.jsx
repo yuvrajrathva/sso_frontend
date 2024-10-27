@@ -44,9 +44,10 @@ export default function SetupPage() {
             backgroundColor: "#f4f4f4",
             padding: "10px",
             borderRadius: "4px",
+            border: "1px solid #ddd",
           }}
         >
-          <code>{codeToCopy}</code>
+          <code style={{color: "black"}}>{codeToCopy}</code>
         </pre>
         <button
           onClick={handleCopy}
