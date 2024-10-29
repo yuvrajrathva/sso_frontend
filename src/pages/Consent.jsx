@@ -48,6 +48,8 @@ export default function Consent() {
   const state = location.state?.state || params.get("state");
   const redirect_uri = location.state?.redirect_uri || params.get("redirect_uri");
 
+  // TODO: Verify consent in the initial loading of the page
+
   const handleContinuing = () => {
     const consentData = {
       response_type: response_type,

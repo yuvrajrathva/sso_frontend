@@ -8,7 +8,7 @@ function Landing() {
 
     useEffect(() => {
         verifySession();
-    })
+    }, [])
 
     return (<>
         <h2>Landing Page</h2>
