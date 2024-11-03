@@ -27,10 +27,13 @@ const useAxios = () => {
 
       if (!isExpired) return req;
       console.log("Refreshing token...");
-      const response = await axios.post(
-        `${backendUrl}/developer/token/refresh/`,
+      const response = await axios.get(
+        `${backendUrl}/api/token/refresh/`,
         {
-          refresh_token: authTokens.refresh_token,
+          headers: {
+          "Content-Type": "application/json",
+          "refresh_token": authTokens.refresh_token,
+          }
         }
       );
 
