@@ -47,8 +47,8 @@ export default function Consent() {
   const scope = location.state?.scope || params.get("scope");
   const client_id = location.state?.client_id || params.get("client_id");
   const state = location.state?.state || params.get("state");
-  const redirect_uri =
-    location.state?.redirect_uri || params.get("redirect_uri");
+  const redirect_url =
+    location.state?.redirect_url || params.get("redirect_url");
 
   // TODO: Verify consent in the initial loading of the page
 
@@ -58,7 +58,7 @@ export default function Consent() {
       scope: scope,
       client_id: client_id,
       state: state,
-      redirect_uri: redirect_uri,
+      redirect_url: redirect_url,
     };
     console.log(consentData);
     const sessionId = localStorage.getItem("session_id");
@@ -70,7 +70,7 @@ export default function Consent() {
       })
       .then((response) => {
         console.log(response);
-        window.location.href = `${response.data.redirect_uri}?auth_code=${response.data.code}&state=${response.data.state}`;
+        window.location.href = `${response.data.redirect_url}?auth_code=${response.data.code}&state=${response.data.state}`;
       })
       .catch((error) => {
         console.error(error);

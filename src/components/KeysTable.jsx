@@ -64,10 +64,10 @@ const headCells = [
     label: "Client secret",
   },
   {
-    id: "redirectUri",
+    id: "redirectUrl",
     numeric: false,
     disablePadding: false,
-    label: "Redirect URI",
+    label: "Redirect URL",
   },
   {
     id: "scopes",
@@ -293,7 +293,7 @@ export default function KeysTable(props) {
             }),
             clientId: row.client_id,
             clientSecret: row.client_secret,
-            redirectUri: row.redirect_url,
+            redirectUrl: row.redirect_url,
             scopes: row.scopes.join(", "),
           };
         })
@@ -399,7 +399,7 @@ export default function KeysTable(props) {
                         />
                       </div>
                     </TableCell>
-                    <TableCell align="left">{row.redirectUri}</TableCell>
+                    <TableCell align="left">{row.redirectUrl}</TableCell>
                     <TableCell align="left">{row.scopes}</TableCell>
                   </TableRow>
                 );

@@ -48,7 +48,7 @@ export default function Credentials() {
   const [rows, setRows] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [keyName, setKeyName] = React.useState("");
-  const [redirectUri, setRedirectUri] = React.useState("");
+  const [redirectUrl, setRedirectUrl] = React.useState("");
   const [scopes, setScopes] = React.useState([]);
   const [selectedScopes, setSelectedScopes] = React.useState([]);
 
@@ -63,7 +63,7 @@ export default function Credentials() {
     const newKeyData = {
       name: keyName,
       developer_id: user.sub,
-      redirect_url: redirectUri,
+      redirect_url: redirectUrl,
       scopes: selectedScopes,
     };
     console.log(newKeyData);
@@ -163,12 +163,12 @@ export default function Credentials() {
                 autoFocus
                 required
                 margin="dense"
-                id="redirect-uri"
-                name="redirect-uri"
-                label="Redirect URI"
+                id="redirect-url"
+                name="redirect-url"
+                label="Redirect URL"
                 type="text"
                 fullWidth
-                onChange={(event) => setRedirectUri(event.target.value)}
+                onChange={(event) => setRedirectUrl(event.target.value)}
                 variant="outlined"
               />
               <FormControl fullWidth margin="dense">

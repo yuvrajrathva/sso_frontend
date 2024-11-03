@@ -4,13 +4,13 @@ export default function SetupPage() {
   const loginButtonCode = `
   const SSO_LOGIN_CLIENT_URL = <SSO_LOGIN_URL>; // e.g. "http://localhost:5173/landing"
   const CLIENT_ID = <YOUR_CLIENT_ID>; // e.g. "bbdo4vhtvu7e"
-  const REDIRECT_URI = <YOUR_REDIRECT_URI>; // e.g. Your application uri "http://localhost:5174"
+  const REDIRECT_URL = <YOUR_REDIRECT_URL>; // e.g. Your application url "http://localhost:5174"
   const RESPONSE_TYPE = "code";
   const SCOPE = <YOUR_ALLOWED_SCOPES>; // e.g. "openid profile email"
   const STATE = Math.random().toString(36).substring(2);
 
   const handleLogin = () => {
-    window.location.href = \`\${SSO_LOGIN_CLIENT_URL}?client_id=\${CLIENT_ID}&redirect_uri=\${REDIRECT_URI}
+    window.location.href = \`\${SSO_LOGIN_CLIENT_URL}?client_id=\${CLIENT_ID}&redirect_url=\${REDIRECT_URL}
     &response_type=\${RESPONSE_TYPE}&scope=\${SCOPE}&state=\${STATE}\`;
   };
 
@@ -23,7 +23,7 @@ export default function SetupPage() {
   const CLIENT_ID = "bbdo4vhtvu7e";
   const CLIENT_SECRET = "3b3b4b3b-3b3b-3b3b-3b3b-3b3b3b3b3b3b";
   const SSO_URL = <SSO_URL>; // e.g. "http://localhost:5173";
-  const REDIRECT_URI = <YOUR_REDIRECT_URI>; // e.g. Your application uri "http://localhost:5174";
+  const REDIRECT_URL = <YOUR_REDIRECT_URL>; // e.g. Your application url "http://localhost:5174";
   const CLIENT_ID = <YOUR_CLIENT_ID>; // e.g. "bbdo4vhtvu7e";
   const CLIENT_SECRET = <YOUR_CLIENT_SECRET>; // e.g. "3b3b4b3b-3b3b-3b3b-3b3b-3b3b3b3b3b3b";
   
@@ -33,7 +33,7 @@ export default function SetupPage() {
       {
         auth_code: auth_code,
         grant_type: "authorization_code",
-        redirect_uri: REDIRECT_URI,
+        redirect_url: REDIRECT_URL,
       },
       {
         headers: {

@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const redirectUri = searchParams.get("redirect_uri");
+  const redirectUrl = searchParams.get("redirect_url");
   const responseType = searchParams.get("response_type");
   const clientId = searchParams.get("client_id");
   const scope = searchParams.get("scope");
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     const loginData = {
       email: email,
       password: password,
-      redirect_uri: redirectUri,
+      redirect_url: redirectUrl,
       response_type: responseType,
       client_id: clientId,
       scope: scope,
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
           client_id: loginData.client_id,
           state: loginData.state,
           scope: response.data.scope,
-          redirect_uri: loginData.redirect_uri,
+          redirect_url: loginData.redirect_url,
         },
       });
       console.log(response.data);
@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }) => {
   const verifySession = async () => {
     try {
       const verifySessionData = {
-        redirect_uri: redirectUri,
+        redirect_url: redirectUrl,
         response_type: responseType,
         client_id: clientId,
         scope: scope,
@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }) => {
     scope,
     clientId,
     responseType,
-    redirectUri,
+    redirectUrl,
     state,
     verifySession
   };
