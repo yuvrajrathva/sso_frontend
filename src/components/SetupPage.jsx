@@ -20,34 +20,44 @@ export default function SetupPage() {
   `;
 
   const fetchDataCode = `
-  const CLIENT_ID = "bbdo4vhtvu7e";
-  const CLIENT_SECRET = "3b3b4b3b-3b3b-3b3b-3b3b-3b3b3b3b3b3b";
   const SSO_URL = <SSO_URL>; // e.g. "http://localhost:5173";
   const REDIRECT_URL = <YOUR_REDIRECT_URL>; // e.g. Your application url "http://localhost:5174";
   const CLIENT_ID = <YOUR_CLIENT_ID>; // e.g. "bbdo4vhtvu7e";
   const CLIENT_SECRET = <YOUR_CLIENT_SECRET>; // e.g. "3b3b4b3b-3b3b-3b3b-3b3b-3b3b3b3b3b3b";
   
-  const handleUserDataRequest = () => {
-    const response = axios.post(
-      \`\${SSO_URL}/api/token/\`,
-      {
-        auth_code: auth_code,
-        grant_type: "authorization_code",
-        redirect_url: REDIRECT_URL,
-      },
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Authorization":
-            "Basic " +
-            new Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
+  const handleTokenRequest = () => {
+    const requestData = {
+      auth_code: auth_code,
+      grant_type: "authorization_code",
+      redirect_url: REDIRECT_URL,
+    };
+
+    try {
+      const response = axios.post(
+        \`\${SSO_URL}/api/token/\`,
+        {
+          auth_code: auth_code,
+          grant_type: "authorization_code",
+          redirect_url: REDIRECT_URL,
         },
-        json: true,
-      }
-    );
-  
-    console.log(response);
-    // on success, the respone will have 200 OK status and JSON data with body containing, access_token, refresh_token, and expires_in
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization":
+              "Basic " +
+              new Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
+          },
+          json: true,
+        }
+      );
+      const access_token = response.data.access_token;
+      const refresh_token = response.data.refresh_token;
+
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+    } catch (error) {
+      console.error(error);
+    }
   };
   `;
 
@@ -100,7 +110,7 @@ export default function SetupPage() {
       </div>
       <br/>
       <p>
-        Copy the code below and paste it in your code file where you want to fetch user data using auth_code and client_secret. 
+        Copy the code below and paste it in your code file where you want to fetch access token for fetching data using auth_code and client_secret. 
       </p>
       <div
         style={{ position: "relative", margin: "20px 0" }}

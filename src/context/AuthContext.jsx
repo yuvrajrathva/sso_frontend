@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }) => {
           session_id: localStorage.getItem("session_id"),
         },
       });
-      console.log(response);
+      console.log(response.request.responseURL);
       window.location.href = response.request.responseURL;
       return response.data;
     } catch (error) {
