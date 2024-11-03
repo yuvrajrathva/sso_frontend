@@ -64,18 +64,40 @@ export default function SetupPage() {
   const fetchUserDataCode = `
   // Function to fetch user data using access token
   const handleUserDataRequest = async () => {
-    const access_token = localStorage.getItem("access_token");
+    const user = jwtDecode(localStorage.getItem("access_token"));
+    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+
+    if (isExpired) {
+      try {
+        const response = await axios.get(\`\${backendUrl}/api/token/refresh/\`, {
+          headers: {
+            "Content-Type": "application/json",
+            "refresh_token": localStorage.getItem("refresh_token"),
+          }
+        })
+        console.log(response.data);
+
+        localStorage.setItem("access_token", response.data.access_token);
+        // setAccessToken(response.data.access_token);
+        localStorage.setItem("refresh_token", response.data.refresh_token);
+
+        console.log("New Token saved to local storage");
+      } catch (error) {
+        console.error(error);
+      }
+    } 
 
     try {
       const response = await axios.get(\`\${backendUrl}/user/me/\`, {
         headers: {
-          Authorization: \`Bearer \${access_token}\`,
+          Authorization: \`Bearer \${localStorage.getItem("access_token")}\`,
         },
       });
-      console.log("User Data:", response.data);
+      console.log(response.data);
+      setUserData(response.data);
     } catch (error) {
-      console.error("User data request failed:", error);
-    }
+      console.error(error);
+    }    
   };
   `;
 
