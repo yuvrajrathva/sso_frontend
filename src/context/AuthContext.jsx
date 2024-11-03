@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
           response_type: loginData.response_type,
           client_id: loginData.client_id,
           state: loginData.state,
-          scope: loginData.scope,
+          scope: response.data.scope,
           redirect_uri: loginData.redirect_uri,
         },
       });

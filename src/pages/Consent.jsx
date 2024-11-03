@@ -42,11 +42,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function Consent() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const response_type = location.state?.response_type || params.get("response_type");
+  const response_type =
+    location.state?.response_type || params.get("response_type");
   const scope = location.state?.scope || params.get("scope");
   const client_id = location.state?.client_id || params.get("client_id");
   const state = location.state?.state || params.get("state");
-  const redirect_uri = location.state?.redirect_uri || params.get("redirect_uri");
+  const redirect_uri =
+    location.state?.redirect_uri || params.get("redirect_uri");
 
   // TODO: Verify consent in the initial loading of the page
 
@@ -62,9 +64,9 @@ export default function Consent() {
     const sessionId = localStorage.getItem("session_id");
     axios
       .post(`${backendUrl}/service-provider/authorize/`, consentData, {
-      headers: {
-        "session_id": sessionId,
-      },
+        headers: {
+          session_id: sessionId,
+        },
       })
       .then((response) => {
         console.log(response);
@@ -84,16 +86,17 @@ export default function Consent() {
           </Typography>
           <Typography variant="body1" align="center">
             By continuing, SSO IITJ will share your{" "}
-            {scope
-              .split(" ")
-              .filter((e) => e != "open-id")
-              .slice(0, -1)
-              .join(", ") +
-              " and " +
-              scope
-                .split(" ")
-                .filter((e) => e != "open-id")
-                .slice(-1)}{" "}
+            {scope.split(" ").filter((e) => e != "open-id").length > 1
+              ? scope
+                  .split(" ")
+                  .filter((e) => e != "open-id")
+                  .slice(0, -1)
+                  .join(", ") + " and "
+              : "" +
+                scope
+                  .split(" ")
+                  .filter((e) => e != "open-id")
+                  .slice(-1)}{" "}
             with this application.
           </Typography>
           <Stack direction="row" justifyContent="space-between">
