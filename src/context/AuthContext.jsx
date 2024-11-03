@@ -37,17 +37,22 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
 
       toast.success("Logged in successfully.");
-      localStorage.setItem("session_id", response.data.session_id);
-      navigate("/consent", {
-        state: {
-          response_type: loginData.response_type,
-          client_id: loginData.client_id,
-          state: loginData.state,
-          scope: response.data.scope,
-          redirect_url: loginData.redirect_url,
-        },
-      });
-      console.log(response.data);
+      console.log(response);
+
+      if (response.data.should_redirect) {
+        window.location.href = response.data.redirect_url;
+      } else {
+        localStorage.setItem("session_id", response.data.session_id);
+        navigate("/consent", {
+          state: {
+            response_type: loginData.response_type,
+            client_id: loginData.client_id,
+            state: response.data.state,
+            scope: response.data.scope,
+            redirect_url: response.data.redirect_url,
+          },
+        });
+      }
       return response.data;
     } catch (error) {
       console.error(error);
@@ -114,11 +119,15 @@ export const AuthProvider = ({ children }) => {
         scope: scope,
         state: state,
       };
-      const response = await axios.post(`${backendUrl}/user/verify-session`, verifySessionData, {
-        headers: {
-          session_id: localStorage.getItem("session_id"),
-        },
-      });
+      const response = await axios.post(
+        `${backendUrl}/user/verify-session`,
+        verifySessionData,
+        {
+          headers: {
+            session_id: localStorage.getItem("session_id"),
+          },
+        }
+      );
       console.log(response.request.responseURL);
       window.location.href = response.request.responseURL;
       return response.data;
@@ -126,7 +135,7 @@ export const AuthProvider = ({ children }) => {
       console.error(error);
       throw error;
     }
-  }
+  };
 
   const contextData = {
     login,
@@ -136,7 +145,7 @@ export const AuthProvider = ({ children }) => {
     responseType,
     redirectUrl,
     state,
-    verifySession
+    verifySession,
   };
 
   React.useEffect(() => {
