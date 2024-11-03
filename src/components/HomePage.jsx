@@ -55,12 +55,13 @@ export default function HomePage(props) {
             <div style={{ marginBottom: "30px" }}>
               <p style={{ color: "grey", fontWeight: "bold" }}>DESCRIPTION</p>
               <p>
-                API keys are used to authenticate requests to the API. You can
-                generate and manage your API keys in your account settings.
+                API keys are used to authenticate IITJ SSO users and authorize a
+                service provider to access their data. Keep your keys secure and
+                never share them with anyone.
               </p>
             </div>
             <div style={{ marginBottom: "30px" }}>
-              <p style={{ color: "grey", fontWeight: "bold" }}>CLIENT ID</p>
+              <p style={{ color: "grey", fontWeight: "bold" }}>DUMMY CLIENT ID</p>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "50px" }}
               >
@@ -76,13 +77,13 @@ export default function HomePage(props) {
               </div>
             </div>
             <div style={{ marginBottom: "30px" }}>
-              <p style={{ color: "grey", fontWeight: "bold" }}>CLIENT SECRET</p>
+              <p style={{ color: "grey", fontWeight: "bold" }}>DUMMY CLIENT SECRET</p>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "50px" }}
               >
                 {showSecret ? (
                   <p style={{ margin: "0", width: "100%" }}>
-                    dwkfhasf yyhifasdfsaf hihfiasdhffddd
+                    fu72nomigloh9bojsxo1
                   </p>
                 ) : (
                   <p
@@ -126,27 +127,43 @@ export default function HomePage(props) {
               }}
             >
               <Quiz fontSize="large" />
-              Why to use SSO IITJ?
+              Why Use IITJ Single Sign-On (SSO)?
             </h2>
             <p style={{ color: "grey" }}>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum
-              laborum dolores id cumque ab atque dolore aliquid maiores
+              Single Sign-On (SSO) at IITJ streamlines the login experience
+              across all IITJ applications, offering key benefits for both users
+              and developers:
               <br />
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              dolore, aliquam ea aut eos praesentium cum ducimus nemo. Rerum
-              veniam praesentium modi hic delectus iste dolorum minus voluptatum
-              optio distinctio.
-              <br />
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa enim
-              labore id quibusdam! Ullam debitis vero exercitationem ut laborum
-              ducimus, est dicta nihil cupiditate eos, error facere placeat
-              ipsam. Omnis!
+              <b>1. Seamless Access Across IITJ Sites</b>: Users only need to
+              log in once to access all IITJ applications. After the first
+              login, users can navigate to other IITJ sites without needing to
+              re-enter credentials, making the experience faster and more
+              convenient. <br />
+              <b>2. Enhanced Privacy Control</b>: With SSO, users are prompted
+              to share personal information only once. Instead of submitting
+              data separately to each IITJ site, users can manage which sites
+              have access to their information. Each application can request
+              different levels of access based on the specific data it needs,
+              improving both privacy and data control. <br />
+              <b>3. Reduced Data Redundancy for Developers</b>: Developers don’t
+              need to store duplicate user information across multiple
+              applications, reducing data redundancy and making it easier to
+              maintain consistent and accurate user information.
+              <br /> <b>4. Centralized Authentication Management</b>: IITJ’s SSO
+              handles all authentication processes, freeing developers from the
+              burden of implementing complex login systems for each application.
+              This reduces security risks and allows developers to focus on
+              building better features. SSO at IITJ simplifies user access,
+              enhances data privacy, and provides a centralized authentication
+              system that benefits both users and developers.
             </p>
-            <img
-              src="https://cdn.prod.website-files.com/5ff66329429d880392f6cba2/62cf03b33d834a7ead7784d5_What%20is%20SSO.jpg"
-              alt="sso-representation"
-              style={{ width: "100%" }}
-            />
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <img
+                src="https://cdn.prod.website-files.com/5ff66329429d880392f6cba2/62cf03b33d834a7ead7784d5_What%20is%20SSO.jpg"
+                alt="sso-representation"
+                style={{ width: "50%", margin: "auto" }}
+              />
+            </div>
           </Paper>
         </Grid>
       </Grid>
