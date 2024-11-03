@@ -19,7 +19,7 @@ export default function SetupPage() {
   );
   `;
 
-  const fetchDataCode = `
+  const fetchAccessTokenCode = `
   const SSO_URL = <SSO_URL>; // e.g. "http://localhost:5173";
   const REDIRECT_URL = <YOUR_REDIRECT_URL>; // e.g. Your application url "http://localhost:5174";
   const CLIENT_ID = <YOUR_CLIENT_ID>; // e.g. "bbdo4vhtvu7e";
@@ -35,14 +35,10 @@ export default function SetupPage() {
     try {
       const response = axios.post(
         \`\${SSO_URL}/api/token/\`,
-        {
-          auth_code: auth_code,
-          grant_type: "authorization_code",
-          redirect_url: REDIRECT_URL,
-        },
+        requestData,
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json",
             "Authorization":
               "Basic " +
               new Buffer.from(CLIENT_ID + ":" + CLIENT_SECRET).toString("base64"),
@@ -55,6 +51,22 @@ export default function SetupPage() {
 
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  `;
+
+  const fetchUserDataCode = `
+  const handleUserDataRequest = async () => {
+    const access_token = localStorage.getItem("access_token");
+    try {
+      const response = await axios.get(\`\${backendUrl}/user/me/\`, {
+        headers: {
+          Authorization: \`Bearer \${access_token}\`,
+        },
+      });
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -110,7 +122,7 @@ export default function SetupPage() {
       </div>
       <br/>
       <p>
-        Copy the code below and paste it in your code file where you want to fetch access token for fetching data using auth_code and client_secret. 
+        Copy the code below and paste it in your code file where you want to fetch access token using auth_code and client_secret. 
       </p>
       <div
         style={{ position: "relative", margin: "20px 0" }}
@@ -124,7 +136,7 @@ export default function SetupPage() {
           }}
         >
           <code style={{color: "black"}}>
-            {fetchDataCode}
+            {fetchAccessTokenCode}
           </code>
         </pre>
         <button
