@@ -87,12 +87,10 @@ export default function SetupPage() {
       <p>This is the setup page. You can use this page to set up your app.</p>
       <h2>Instructions</h2>
       <p>
-        Copy the code below and paste it in your code file where you want to use the
-        SSO login button.
+        Copy the code below and paste it in your code file where you want to use
+        the SSO login button.
       </p>
-      <div
-        style={{ position: "relative", margin: "20px 0" }}
-      >
+      <div style={{ position: "relative", margin: "20px 0" }}>
         <pre
           style={{
             backgroundColor: "#f4f4f4",
@@ -101,7 +99,7 @@ export default function SetupPage() {
             border: "1px solid #ddd",
           }}
         >
-          <code style={{color: "black"}}>{loginButtonCode}</code>
+          <code style={{ color: "black" }}>{loginButtonCode}</code>
         </pre>
         <button
           onClick={handleLoginButtonCopy}
@@ -120,13 +118,12 @@ export default function SetupPage() {
           {copySuccess ? copySuccess : "Copy code"}
         </button>
       </div>
-      <br/>
+      <br />
       <p>
-        Copy the code below and paste it in your code file where you want to fetch access token using auth_code and client_secret. 
+        Copy the code below and paste it in your code file where you want to
+        fetch access token using auth_code and client_secret.
       </p>
-      <div
-        style={{ position: "relative", margin: "20px 0" }}
-      >
+      <div style={{ position: "relative", margin: "20px 0" }}>
         <pre
           style={{
             backgroundColor: "#f4f4f4",
@@ -135,9 +132,7 @@ export default function SetupPage() {
             border: "1px solid #ddd",
           }}
         >
-          <code style={{color: "black"}}>
-            {fetchAccessTokenCode}
-          </code>
+          <code style={{ color: "black" }}>{fetchAccessTokenCode}</code>
         </pre>
         <button
           onClick={handleLoginButtonCopy}
@@ -156,7 +151,39 @@ export default function SetupPage() {
           {copySuccess ? copySuccess : "Copy code"}
         </button>
       </div>
-
+      <br />
+      <p>
+        Copy the code below and paste it in your code file where you want to
+        fetch user data using access token.
+      </p>
+      <div style={{ position: "relative", margin: "20px 0" }}>
+        <pre
+          style={{
+            backgroundColor: "#f4f4f4",
+            padding: "10px",
+            borderRadius: "4px",
+            border: "1px solid #ddd",
+          }}
+        >
+          <code style={{ color: "black" }}>{fetchUserDataCode}</code>
+        </pre>
+        <button
+          onClick={handleLoginButtonCopy}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            backgroundColor: `${copySuccess ? "#28a745" : "#007bff"}`,
+            color: "#fff",
+            border: "none",
+            padding: "5px 10px",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          {copySuccess ? copySuccess : "Copy code"}
+        </button>
+      </div>
     </>
   );
 }
