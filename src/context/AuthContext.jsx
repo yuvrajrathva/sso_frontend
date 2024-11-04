@@ -40,9 +40,11 @@ export const AuthProvider = ({ children }) => {
       console.log(response);
 
       if (response.data.should_redirect) {
+        localStorage.setItem("session_id", response.data.session_id);
         window.location.href = response.data.redirect_url;
       } else {
         localStorage.setItem("session_id", response.data.session_id);
+        // TODO: Do this redirection thing from Frontend
         navigate("/consent", {
           state: {
             response_type: loginData.response_type,
