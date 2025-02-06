@@ -7,13 +7,13 @@ import { backendUrl } from "../config.js";
 const AuthContext = React.createContext();
 export default AuthContext;
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const redirectUri = searchParams.get("redirect_uri");
+  const redirectUrl = searchParams.get("redirect_url");
   const responseType = searchParams.get("response_type");
   const clientId = searchParams.get("client_id");
   const scope = searchParams.get("scope");
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     const loginData = {
       email: email,
       password: password,
-      redirect_uri: redirectUri,
+      redirect_url: redirectUrl,
       response_type: responseType,
       client_id: clientId,
       scope: scope,
@@ -37,16 +37,24 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
 
       toast.success("Logged in successfully.");
-      navigate("/consent", {
-        state: {
-          response_type: loginData.response_type,
-          client_id: loginData.client_id,
-          state: loginData.state,
-          scope: loginData.scope,
-          redirect_uri: loginData.redirect_uri,
-        },
-      });
-      console.log(response.data);
+      console.log(response);
+
+      if (response.data.should_redirect) {
+        localStorage.setItem("session_id", response.data.session_id);
+        window.location.href = response.data.redirect_url;
+      } else {
+        localStorage.setItem("session_id", response.data.session_id);
+        // TODO: Do this redirection thing from Frontend
+        navigate("/consent", {
+          state: {
+            response_type: loginData.response_type,
+            client_id: loginData.client_id,
+            state: response.data.state,
+            scope: response.data.scope,
+            redirect_url: response.data.redirect_url,
+          },
+        });
+      }
       return response.data;
     } catch (error) {
       console.error(error);
@@ -104,14 +112,42 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifySession = async () => {
+    try {
+      const verifySessionData = {
+        redirect_url: redirectUrl,
+        response_type: responseType,
+        client_id: clientId,
+        scope: scope,
+        state: state,
+      };
+      const response = await axios.post(
+        `${backendUrl}/user/verify-session`,
+        verifySessionData,
+        {
+          headers: {
+            session_id: localStorage.getItem("session_id"),
+          },
+        }
+      );
+      console.log(response.request.responseURL);
+      window.location.href = response.request.responseURL;
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   const contextData = {
     login,
     signup,
     scope,
     clientId,
     responseType,
-    redirectUri,
+    redirectUrl,
     state,
+    verifySession,
   };
 
   React.useEffect(() => {

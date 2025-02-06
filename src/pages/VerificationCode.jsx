@@ -56,7 +56,7 @@ export default function VerificationCode() {
     }
 
     try {
-      const response = await axios.post(`${backendUrl}/verify-code`, {
+      const response = await axios.post(`${backendUrl}/user/verify-code`, {
         email: localStorage.getItem("sso-email"),
         code: code,
       });

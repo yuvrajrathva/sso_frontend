@@ -41,8 +41,16 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 export default function Consent() {
   const location = useLocation();
-  const { response_type, scope, client_id, state, redirect_uri } =
-    location.state;
+  const params = new URLSearchParams(location.search);
+  const response_type =
+    location.state?.response_type || params.get("response_type");
+  const scope = location.state?.scope || params.get("scope");
+  const client_id = location.state?.client_id || params.get("client_id");
+  const state = location.state?.state || params.get("state");
+  const redirect_url =
+    location.state?.redirect_url || params.get("redirect_url");
+
+  // TODO: Verify consent in the initial loading of the page
 
   const handleContinuing = () => {
     const consentData = {
@@ -50,20 +58,27 @@ export default function Consent() {
       scope: scope,
       client_id: client_id,
       state: state,
-      redirect_uri: redirect_uri,
+      redirect_url: redirect_url,
     };
-    console.log(consentData);
+
+    const sessionId = localStorage.getItem("session_id");
     axios
       .post(`${backendUrl}/service-provider/authorize/`, consentData, {
-        withCredentials: true,
+        headers: {
+          session_id: sessionId,
+        },
       })
       .then((response) => {
         console.log(response);
-        window.location.href = `${response.data.redirect_uri}?auth_code=${response.data.code}&state=${response.data.state}`;
+        window.location.href = `${response.data.redirect_url}?auth_code=${response.data.code}&state=${response.data.state}`;
       })
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  const handleCancel = () => {
+    window.location.href = redirect_url;
   };
 
   return (
@@ -75,20 +90,21 @@ export default function Consent() {
           </Typography>
           <Typography variant="body1" align="center">
             By continuing, SSO IITJ will share your{" "}
-            {scope
-              .split(" ")
-              .filter((e) => e != "open-id")
-              .slice(0, -1)
-              .join(", ") +
-              " and " +
-              scope
-                .split(" ")
-                .filter((e) => e != "open-id")
-                .slice(-1)}{" "}
+            {scope.split(" ").filter((e) => e != "open-id").length > 1
+              ? scope
+                  .split(" ")
+                  .filter((e) => e != "open-id")
+                  .slice(0, -1)
+                  .join(", ") + " and "
+              : "" +
+                scope
+                  .split(" ")
+                  .filter((e) => e != "open-id")
+                  .slice(-1)}{" "}
             with this application.
           </Typography>
           <Stack direction="row" justifyContent="space-between">
-            <Button variant="outlined" color="primary">
+            <Button variant="outlined" color="primary" onClick={handleCancel}>
               Cancel
             </Button>
             <Button
