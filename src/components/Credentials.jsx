@@ -75,7 +75,11 @@ export default function Credentials() {
       })
       .catch((error) => {
         console.error("Error creating key:", error);
-        if (error.response && error.response.data && error.response.data.detail) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
           toast.error(error.response.data.detail);
         } else {
           toast.error("An error occurred. Please try again later.");
@@ -94,7 +98,11 @@ export default function Credentials() {
       })
       .catch((error) => {
         console.error("Error fetching scopes:", error);
-        if (error.response && error.response.data && error.response.data.detail) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
           toast.error(error.response.data.detail);
         } else {
           toast.error("An error occurred. Please try again later.");
@@ -215,9 +223,9 @@ export default function Credentials() {
         generate and manage your API keys in your account settings.
       </p>
       {rows?.length === 0 ? (
-        <p>
+        <span style={{ fontStyle: "italic" }}>
           You don't have any API keys yet. Click the button above to create one.
-        </p>
+        </span>
       ) : (
         <KeysTable rows={rows} />
       )}

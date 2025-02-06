@@ -60,7 +60,7 @@ export default function Consent() {
       state: state,
       redirect_url: redirect_url,
     };
-    console.log(consentData);
+
     const sessionId = localStorage.getItem("session_id");
     axios
       .post(`${backendUrl}/service-provider/authorize/`, consentData, {
@@ -75,6 +75,10 @@ export default function Consent() {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  const handleCancel = () => {
+    window.location.href = redirect_url;
   };
 
   return (
@@ -100,7 +104,7 @@ export default function Consent() {
             with this application.
           </Typography>
           <Stack direction="row" justifyContent="space-between">
-            <Button variant="outlined" color="primary">
+            <Button variant="outlined" color="primary" onClick={handleCancel}>
               Cancel
             </Button>
             <Button
